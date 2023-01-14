@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kundregister", "Kundregister\Kundregister.csproj", "{F55EFF7B-C5AE-4173-8300-86A0034082A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kundregister", "Kundregister\Kundregister.csproj", "{F55EFF7B-C5AE-4173-8300-86A0034082A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kund_Business", "Kund_Business\Kund_Business.csproj", "{AF84FDA5-A1CE-4C18-887E-43736FC6D8A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kund_Business", "Kund_Business\Kund_Business.csproj", "{AF84FDA5-A1CE-4C18-887E-43736FC6D8A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kund_Common", "Kund_Common\Kund_Common.csproj", "{07199E99-4CBA-4D4D-9DE9-F31465C1617F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kund_Common", "Kund_Common\Kund_Common.csproj", "{07199E99-4CBA-4D4D-9DE9-F31465C1617F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kund_DataAccess", "Kund_DataAccess\Kund_DataAccess.csproj", "{57BBD85A-E20C-4E4B-BA63-25568F0CD519}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kund_DataAccess", "Kund_DataAccess\Kund_DataAccess.csproj", "{57BBD85A-E20C-4E4B-BA63-25568F0CD519}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kund_Models", "Kund_Models\Kund_Models.csproj", "{9CB4F8AA-E332-4D88-B456-CF7A7CD7C0F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{57BBD85A-E20C-4E4B-BA63-25568F0CD519}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57BBD85A-E20C-4E4B-BA63-25568F0CD519}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57BBD85A-E20C-4E4B-BA63-25568F0CD519}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CB4F8AA-E332-4D88-B456-CF7A7CD7C0F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CB4F8AA-E332-4D88-B456-CF7A7CD7C0F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CB4F8AA-E332-4D88-B456-CF7A7CD7C0F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CB4F8AA-E332-4D88-B456-CF7A7CD7C0F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
