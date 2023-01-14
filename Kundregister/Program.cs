@@ -2,6 +2,7 @@ using Kund_DataAccess.Data;
 using Kundregister.Data;
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,6 +12,9 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 // Denna ska vara med
 builder.Services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// För automapper, kom ihåg AutoMapper.Extensions.Microsoft.DependencyInjection
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

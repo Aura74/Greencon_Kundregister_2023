@@ -1,4 +1,5 @@
-﻿using Kund_Business.Repository.IRepository;
+﻿using AutoMapper;
+using Kund_Business.Repository.IRepository;
 using Kund_DataAccess;
 using Kund_DataAccess.Data;
 using Kund_Models;
@@ -14,49 +15,62 @@ namespace Kund_Business.Repository
     public class CompanyRepository :ICompanyRepository
     {
             private readonly ApplicationDbContext _db;
+            private readonly IMapper _mapper;
 
-            public CompanyRepository(ApplicationDbContext db)
+            public CompanyRepository(ApplicationDbContext db, IMapper mapper)
             {
                 _db = db;
+                _mapper = mapper;
             }
 
             public CompanyDTO Create(CompanyDTO objDTO)
             {
-            Companies company = new Companies()
-                {
-                    CompanyName = objDTO.CompanyName,
-                    Id = objDTO.Id
-                };
+                var obj = _mapper.Map<CompanyDTO, Companies>(objDTO);
 
-                _db.Company.Add(company);
+                var addedObj = _db.Company.Add(obj);
                 _db.SaveChanges();
 
-                return new CompanyDTO()
-                {
-                    Id = company.Id,
-                    CompanyName = company.CompanyName
-                };
+                return _mapper.Map<Companies, CompanyDTO>(addedObj.Entity);
             }
 
             public int Delete(int id)
             {
-                throw new NotImplementedException();
+            var obj = _db.Company.FirstOrDefault(u => u.Id == id);
+            if (obj != null)
+            {
+                _db.Company.Remove(obj);
+                return _db.SaveChanges();
             }
+            return 0;
+        }
 
             public CompanyDTO Get(int id)
             {
-                throw new NotImplementedException();
+            var obj = _db.Company.FirstOrDefault(u => u.Id == id);
+            if (obj != null)
+            {
+                return _mapper.Map<Companies, CompanyDTO>(obj);
             }
+            return new CompanyDTO();
+        }
 
             public IEnumerable<CompanyDTO> GetAll()
             {
-                throw new NotImplementedException();
-            }
+            return _mapper.Map<IEnumerable<Companies>, IEnumerable<CompanyDTO>>(_db.Company);
+        }
 
             public CompanyDTO Update(CompanyDTO objDTO)
             {
-                throw new NotImplementedException();
+            var objFromDb = _db.Company.FirstOrDefault(u => u.Id == objDTO.Id);
+            if (objFromDb != null)
+            {
+                objFromDb.CompanyName = objDTO.CompanyName;
+                _db.Company.Update(objFromDb);
+                _db.SaveChanges();
+                return _mapper.Map<Companies, CompanyDTO>(objFromDb);
             }
+            return objDTO;
+        }
         
     }
 }
