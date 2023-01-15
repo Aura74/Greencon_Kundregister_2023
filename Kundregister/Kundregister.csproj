@@ -23,7 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Kund_Business\Kund_Business.csproj" />
+    <ProjectReference Include="..\Kund_Common\Kund_Common.csproj" />
     <ProjectReference Include="..\Kund_DataAccess\Kund_DataAccess.csproj" />
+    <ProjectReference Include="..\Kund_Models\Kund_Models.csproj" />
   </ItemGroup>
 
 </Project>

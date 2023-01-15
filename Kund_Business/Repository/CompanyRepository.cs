@@ -26,7 +26,6 @@ namespace Kund_Business.Repository
             public CompanyDTO Create(CompanyDTO objDTO)
             {
                 var obj = _mapper.Map<CompanyDTO, Companies>(objDTO);
-
                 var addedObj = _db.Company.Add(obj);
                 _db.SaveChanges();
 
@@ -46,13 +45,13 @@ namespace Kund_Business.Repository
 
             public CompanyDTO Get(int id)
             {
-            var obj = _db.Company.FirstOrDefault(u => u.Id == id);
-            if (obj != null)
-            {
-                return _mapper.Map<Companies, CompanyDTO>(obj);
+                var obj = _db.Company.FirstOrDefault(u => u.Id == id);
+                if (obj != null)
+                {
+                    return _mapper.Map<Companies, CompanyDTO>(obj);
+                }
+                return new CompanyDTO();
             }
-            return new CompanyDTO();
-        }
 
             public IEnumerable<CompanyDTO> GetAll()
             {
@@ -61,16 +60,16 @@ namespace Kund_Business.Repository
 
             public CompanyDTO Update(CompanyDTO objDTO)
             {
-            var objFromDb = _db.Company.FirstOrDefault(u => u.Id == objDTO.Id);
-            if (objFromDb != null)
-            {
-                objFromDb.CompanyName = objDTO.CompanyName;
-                _db.Company.Update(objFromDb);
-                _db.SaveChanges();
-                return _mapper.Map<Companies, CompanyDTO>(objFromDb);
+                var objFromDb = _db.Company.FirstOrDefault(u => u.Id == objDTO.Id);
+                    if (objFromDb != null)
+                    {
+                        objFromDb.CompanyName = objDTO.CompanyName;
+                        _db.Company.Update(objFromDb);
+                        _db.SaveChanges();
+                        return _mapper.Map<Companies, CompanyDTO>(objFromDb);
+                    }
+                return objDTO;
             }
-            return objDTO;
-        }
         
     }
 }

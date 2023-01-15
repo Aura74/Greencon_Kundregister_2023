@@ -1,0 +1,87 @@
+﻿@page "/companies/create"
+@page "/companies/edit/{id:int}"
+@using Kund_Models;
+@inject ICompanyRepository _companyRepository
+@inject NavigationManager _navigationManager
+
+<div class="row my-2">
+
+    <h3 class="card-title text-primary mb-3 ml-3">@Title företag</h3>
+
+    <div class="col-10">
+                @if (IsLoading)
+        {
+             <div class="text-center">
+                <img src="/images/loading.gif">
+                    </div>
+        }
+        else{
+        <EditForm Model="Company" OnValidSubmit="UpsertCompany"> @*OnSubmit om man inte bryr sig om valid, kan användas till annat*@
+            <DataAnnotationsValidator />
+            @*<ValidationSummary/>*@
+
+            <div class="form-group">
+                <label>Företagets namn:</label>
+                <InputText @bind-Value="Company.CompanyName" class="form-control"></InputText>
+                <ValidationMessage For="()=>Company.CompanyName"></ValidationMessage>
+            </div>
+
+            <div class="form-group py-2">
+                <button class="btn btn-primary">@Title företag</button>
+                <NavLink href="companies" class="btn btn-secondary">Tillbaka till listan</NavLink>
+            </div>
+
+        </EditForm>
+          }
+    </div>
+
+</div>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private CompanyDTO Company { get; set; } = new CompanyDTO();
+    private string Title { get; set; } = "Skapa nytt";
+
+    public bool IsLoading { get; set; } = true;
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id == 0)
+        {
+            //create
+            IsLoading = false;
+        }
+        else
+        {
+            //update
+            Title = "Uppdatera";
+            await Task.Run(LoadCompanies);
+        }
+
+    }
+
+    private void LoadCompanies()
+    {
+        Company = _companyRepository.Get(Id);
+        IsLoading = false;
+    }
+
+
+    private void UpsertCompany()
+    {
+        if (Company.Id == 0)
+        {
+            //create
+            _companyRepository.Create(Company);
+        }
+        else
+        {
+            //update
+            _companyRepository.Update(Company);
+        }
+
+        _navigationManager.NavigateTo("companies");
+    }
+}

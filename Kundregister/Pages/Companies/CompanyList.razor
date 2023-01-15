@@ -1,0 +1,71 @@
+﻿@page "/companies"
+@inject ICompanyRepository _companyRepository
+
+<div class="row mt-4">
+    <div class="col-6">
+        <h4 class="card-title text-primary">Företagslistan</h4>
+    </div>
+    <div class="col-4 offset-2">
+        <a href="companies/create" class="btn btn-primary form-control">Lägg till nytt företag </a>
+    </div>
+
+    <div class="col-12 p-3">
+        @if (Company.Any())
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Företagsnamn</th>
+                        <th>Vad vill du göra</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var objCat in Company)
+                    {
+                        <tr>
+                            <td>
+                                @objCat.CompanyName
+                            </td>
+                            <td>
+                                <NavLink href="@($"companies/edit/{objCat.Id}")" class="btn-primary btn">Ändra</NavLink>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            if (IsLoading)
+            {
+                //loading gif
+                <div class="text-center">
+                    <img src="/images/loading.gif">
+                </div>
+            }
+            else
+            {
+                //no records
+                <p>No recrods found.</p>
+            }
+        }
+
+    </div>
+</div>
+
+@code {
+    private IEnumerable<CompanyDTO> Company { get; set; } = new List<CompanyDTO>();
+
+    public bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(LoadCompanies);
+    }
+
+    private void LoadCompanies()
+    {
+        Company = _companyRepository.GetAll();
+        IsLoading = false;
+    }
+}

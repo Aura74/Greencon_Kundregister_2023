@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kund_Common", "Kund_Common\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kund_DataAccess", "Kund_DataAccess\Kund_DataAccess.csproj", "{57BBD85A-E20C-4E4B-BA63-25568F0CD519}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kund_Models", "Kund_Models\Kund_Models.csproj", "{9CB4F8AA-E332-4D88-B456-CF7A7CD7C0F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kund_Models", "Kund_Models\Kund_Models.csproj", "{9CB4F8AA-E332-4D88-B456-CF7A7CD7C0F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

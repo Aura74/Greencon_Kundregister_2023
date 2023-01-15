@@ -1,6 +1,8 @@
 using Kund_DataAccess.Data;
 using Kundregister.Data;
 using Microsoft.EntityFrameworkCore;
+using Kund_Business.Repository;
+using Kund_Business.Repository.IRepository;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,9 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 // Denna ska vara med
 builder.Services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Lägg till referenser med,  lägg till using Kund_Business.Repository; och using Kund_Business.Repository.IRepository; lägger nu till detta i dependecy injection
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 
 // För automapper, kom ihåg AutoMapper.Extensions.Microsoft.DependencyInjection
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
