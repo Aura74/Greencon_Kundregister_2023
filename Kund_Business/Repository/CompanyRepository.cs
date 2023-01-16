@@ -3,6 +3,7 @@ using Kund_Business.Repository.IRepository;
 using Kund_DataAccess;
 using Kund_DataAccess.Data;
 using Kund_Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,29 +24,29 @@ namespace Kund_Business.Repository
                 _mapper = mapper;
             }
 
-            public CompanyDTO Create(CompanyDTO objDTO)
+            public async Task<CompanyDTO> Create(CompanyDTO objDTO)
             {
                 var obj = _mapper.Map<CompanyDTO, Companies>(objDTO);
                 var addedObj = _db.Company.Add(obj);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
 
                 return _mapper.Map<Companies, CompanyDTO>(addedObj.Entity);
             }
 
-            public int Delete(int id)
+            public async Task<int> Delete(int id)
             {
-            var obj = _db.Company.FirstOrDefault(u => u.Id == id);
+            var obj = await _db.Company.FirstOrDefaultAsync(u => u.Id == id);
             if (obj != null)
             {
                 _db.Company.Remove(obj);
-                return _db.SaveChanges();
+                return await _db.SaveChangesAsync();
             }
             return 0;
-        }
+            }
 
-            public CompanyDTO Get(int id)
+            public async Task<CompanyDTO> Get(int id)
             {
-                var obj = _db.Company.FirstOrDefault(u => u.Id == id);
+                var obj = await _db.Company.FirstOrDefaultAsync(u => u.Id == id);
                 if (obj != null)
                 {
                     return _mapper.Map<Companies, CompanyDTO>(obj);
@@ -53,23 +54,22 @@ namespace Kund_Business.Repository
                 return new CompanyDTO();
             }
 
-            public IEnumerable<CompanyDTO> GetAll()
+            public async Task<IEnumerable<CompanyDTO>> GetAll()
             {
             return _mapper.Map<IEnumerable<Companies>, IEnumerable<CompanyDTO>>(_db.Company);
-        }
+            }
 
-            public CompanyDTO Update(CompanyDTO objDTO)
+            public async Task<CompanyDTO> Update(CompanyDTO objDTO)
             {
-                var objFromDb = _db.Company.FirstOrDefault(u => u.Id == objDTO.Id);
+                var objFromDb = await _db.Company.FirstOrDefaultAsync(u => u.Id == objDTO.Id);
                     if (objFromDb != null)
                     {
                         objFromDb.CompanyName = objDTO.CompanyName;
                         _db.Company.Update(objFromDb);
-                        _db.SaveChanges();
+                        await _db.SaveChangesAsync();
                         return _mapper.Map<Companies, CompanyDTO>(objFromDb);
                     }
                 return objDTO;
             }
-        
     }
 }

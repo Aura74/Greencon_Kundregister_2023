@@ -9,10 +9,10 @@ namespace Kund_Business.Repository.IRepository
 {
     public interface ICompanyRepository
     {
-        public CompanyDTO Create(CompanyDTO objDTO);
-        public CompanyDTO Update(CompanyDTO objDTO);
-        public int Delete(int id);
-        public CompanyDTO Get(int id);
-        public IEnumerable<CompanyDTO> GetAll();
+        public Task<CompanyDTO> Create(CompanyDTO objDTO);
+        public Task<CompanyDTO> Update(CompanyDTO objDTO);
+        public Task<int> Delete(int id);
+        public Task<CompanyDTO> Get(int id);
+        public Task<IEnumerable<CompanyDTO>> GetAll();
     }
 }

@@ -45,41 +45,47 @@
     private CompanyDTO Company { get; set; } = new CompanyDTO();
     private string Title { get; set; } = "Skapa nytt";
 
-    public bool IsLoading { get; set; } = true;
-    protected override async Task OnInitializedAsync()
+    public bool IsLoading { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (Id == 0)
+        if (firstRender)
         {
-            //create
-            IsLoading = false;
-        }
-        else
-        {
-            //update
-            Title = "Uppdatera";
-            await Task.Run(LoadCompanies);
+            if (Id == 0)
+            {
+                //create
+                IsLoading = false;
+            }
+            else
+            {
+                //update
+                Title = "Update";
+                await LoadCompanies();
+            }
         }
 
     }
 
-    private void LoadCompanies()
+    private async Task LoadCompanies()
     {
-        Company = _companyRepository.Get(Id);
+        IsLoading = true;
+        StateHasChanged();
+        Company = await _companyRepository.Get(Id);
         IsLoading = false;
+        StateHasChanged();
     }
 
 
-    private void UpsertCompany()
+    private async Task UpsertCompany()
     {
         if (Company.Id == 0)
         {
             //create
-            _companyRepository.Create(Company);
+            await _companyRepository.Create(Company);
         }
         else
         {
             //update
-            _companyRepository.Update(Company);
+            await _companyRepository.Update(Company);
         }
 
         _navigationManager.NavigateTo("companies");
