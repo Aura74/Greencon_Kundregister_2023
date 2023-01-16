@@ -1,0 +1,126 @@
+﻿@page "/customer/create"
+@page "/customer/edit/{id:int}"
+@using Kund_Models;
+@inject ICompanyRepository _companyRepository
+@inject ICustomerRepository _customerRepository
+@inject NavigationManager _navigationManager
+
+<div class="row my-2">
+
+    <h3 class="card-title text-primary mb-3 ml-3">@Title kund</h3>
+
+    <div class="col-10">
+                @if (IsLoading)
+        {
+             <div class="text-center">
+                <img src="/images/loading.gif">
+                    </div>
+        }
+        else{
+            <EditForm Model="Customer" OnValidSubmit="UpsertCustomer">
+                @*OnSubmit om man inte bryr sig om valid, kan användas till annat*@
+            <DataAnnotationsValidator />
+            @*<ValidationSummary/>*@
+
+            <div class="form-group">
+                <label>Förnamn:</label>
+                    <InputText @bind-Value="Customer.FirstName" class="form-control"></InputText>
+                    <ValidationMessage For="()=>Customer.FirstName"></ValidationMessage>
+            </div>
+
+                <div class="form-group">
+                    <label>Efternamn:</label>
+                    <InputText @bind-Value="Customer.LastName" class="form-control"></InputText>
+                    <ValidationMessage For="()=>Customer.LastName"></ValidationMessage>
+                </div>
+
+
+                <div class="form-group">
+                    <label>Beskrivning:</label>
+                    <InputTextArea @bind-Value="Customer.Desciption" class="form-control"></InputTextArea>
+                    <ValidationMessage For="()=>Customer.Desciption"></ValidationMessage>
+                </div>
+
+
+                <div class="form-group col-6">
+                    <label>Företag</label>
+                    <InputSelect @bind-Value="Customer.CompaniesId" class="form-select">
+                        <option value="0" disabled="disabled" selected>--Välj företag--</option>
+                        @foreach (var comp in Companies)
+                        {
+                            <option value="@comp.Id">@comp.CompanyName</option>
+                        }
+
+                    </InputSelect>
+                    <ValidationMessage For="()=>Customer.CompaniesId"></ValidationMessage>
+                </div>
+
+
+
+
+
+            <div class="form-group py-2">
+                <button class="btn btn-primary">@Title kund</button>
+                    <NavLink href="customer" class="btn btn-secondary">Tillbaka till listan</NavLink>
+            </div>
+
+        </EditForm>
+          }
+    </div>
+
+</div>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private CustomerDTO Customer { get; set; } = new(); //CustomerDTO
+
+    private IEnumerable<CompanyDTO> Companies { get; set; } = new List<CompanyDTO>();
+
+
+    private string Title { get; set; } = "Skapa ny";
+
+    public bool IsLoading { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadCustomers();
+        }
+
+    }
+
+    private async Task LoadCustomers()
+    {
+        IsLoading = true;
+        StateHasChanged();
+        Companies = await _companyRepository.GetAll();
+        if (Id != 0)
+        {
+            //Uppdatera
+            Title = "Uppdatera";
+            Customer = await _customerRepository.Get(Id); // Customer kan vara fel
+        }
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+
+    private async Task UpsertCustomer()
+    {
+        if (Customer.Id == 0)
+        {
+            //create
+            await _customerRepository.Create(Customer);
+        }
+        else
+        {
+            //update
+            await _customerRepository.Update(Customer);
+        }
+
+        _navigationManager.NavigateTo("customer");
+    }
+}

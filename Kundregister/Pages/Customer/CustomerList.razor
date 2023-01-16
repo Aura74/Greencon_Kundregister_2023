@@ -1,37 +1,54 @@
-﻿@page "/companies"
-@inject ICompanyRepository _companyRepository
+﻿@page "/customer"
+@inject ICustomerRepository _customerRepository
 @inject IJSRuntime _jsRuntime
 
 <_DeleteConfirmation IsParentComponentProcessing="IsLoading" ConfirmationChanged="ConfirmDelete_Click"></_DeleteConfirmation>
 
 <div class="row mt-4">
     <div class="col-6">
-        <h4 class="card-title text-primary">Företagslistan</h4>
+        <h4 class="card-title text-primary">Kundregister</h4>
     </div>
     <div class="col-4 offset-2">
-        <a href="companies/create" class="btn btn-primary form-control">Lägg till nytt företag </a>
+        <a href="customer/create" class="btn btn-primary form-control">Skapa ny kund </a>
     </div>
 
     <div class="col-12 p-3">
-        @if (Company.Any())
+        @if (Customers.Any())
         {
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th>ID</th>
+                        <th>Förnamn</th>
+                        <th>Efternamn</th>
                         <th>Företag</th>
-                        <th>Ändra eller ta bort företag</th>
+                        <th>Skapad</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var objCat in Company)
+                    @foreach (var cust in Customers)
                     {
                         <tr>
                             <td>
-                                @objCat.CompanyName
+                                @cust.Id
+                            </td>
+                                                        <td>
+                                @cust.FirstName
+                            </td>
+                                                        <td>
+                                @cust.LastName
+                            </td>
+
+                            <td>
+                                @cust.Companies.CompanyName
                             </td>
                             <td>
-                                <NavLink href="@($"companies/edit/{objCat.Id}")" class="btn-primary btn">Ändra</NavLink>
-                                <button class="btn btn-danger" @onclick="()=>HandleDelete(objCat.Id)">Ta bort</button>
+                                @cust.CreatedDate
+                            </td>
+
+                            <td>
+                                <NavLink href="@($"customer/edit/{cust.Id}")" class="btn-primary btn">Ändra</NavLink>
+                                <button class="btn btn-danger" @onclick="()=>HandleDelete(cust.Id)">Ta bort</button>
                             </td>
                         </tr>
                     }
@@ -50,7 +67,7 @@
             else
             {
                 //no records
-                <p>Det finns inga företag lagrade i databasen.</p>
+                <p>Det finns inga kunder lagrade i databasen.</p>
             }
         }
 
@@ -58,43 +75,43 @@
 </div>
 
 @code {
-    private IEnumerable<CompanyDTO> Company { get; set; } = new List<CompanyDTO>();
+    private IEnumerable<CustomerDTO> Customers { get; set; } = new List<CustomerDTO>();
 
     public bool IsLoading { get; set; }
 
-    private int DeleteCompanyId { get; set; } = 0;
+    private int DeleteCustomersId { get; set; } = 0;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await LoadCompanies();
+            await LoadCustomers();
         }
     }
 
-    private async Task LoadCompanies()
+    private async Task LoadCustomers()
     {
         IsLoading=true;
         StateHasChanged();
-        Company = await _companyRepository.GetAll();
+        Customers = await _customerRepository.GetAll();
         IsLoading = false;
         StateHasChanged();
     }
 
     private void HandleDelete(int id)
     {
-        DeleteCompanyId = id;
+        DeleteCustomersId = id;
         _jsRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
     }
 
     public async Task ConfirmDelete_Click(bool isConfirmed)
     {
         IsLoading = true;
-        if (isConfirmed && DeleteCompanyId != 0)
+        if (isConfirmed && DeleteCustomersId != 0)
         {
             //IsLoading = true;
-            await _companyRepository.Delete(DeleteCompanyId);
-            await LoadCompanies();
+            await _customerRepository.Delete(DeleteCustomersId);
+            await LoadCustomers();
             await _jsRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
         }
         IsLoading = false;

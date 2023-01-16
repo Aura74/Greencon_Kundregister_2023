@@ -17,6 +17,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServ
 
 // Lägg till referenser med,  lägg till using Kund_Business.Repository; och using Kund_Business.Repository.IRepository; lägger nu till detta i dependecy injection
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 // För automapper, kom ihåg AutoMapper.Extensions.Microsoft.DependencyInjection
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

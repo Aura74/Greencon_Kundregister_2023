@@ -14,6 +14,7 @@ namespace Kund_Business.Mapper
         public MappingProfile()
         {
             CreateMap<Companies, CompanyDTO>().ReverseMap();
+            CreateMap<Customer, CustomerDTO>().ReverseMap();
         }
         
     }

@@ -16,5 +16,6 @@ namespace Kund_DataAccess.Data
         }
         // kommer skapa en table i sql databasen
         public DbSet<Companies> Company { get; set; }
+        public DbSet<Customer> Customers { get; set; }
     }
 }
