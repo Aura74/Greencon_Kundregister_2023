@@ -17,7 +17,7 @@ namespace Kund_Models
         public string LastName { get; set; }
         public string Desciption { get; set; }
         public DateTime CreatedDate { get; set; }
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
         
         [Range(1, int.MaxValue, ErrorMessage = "Välj ett företag")]
         public int CompaniesId { get; set; }

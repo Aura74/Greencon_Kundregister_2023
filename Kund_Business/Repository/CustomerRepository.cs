@@ -55,7 +55,8 @@ namespace Kund_Business.Repository
                 return new CustomerDTO();
             }
 
-            public async Task<IEnumerable<CustomerDTO>> GetAll()
+
+        public async Task<IEnumerable<CustomerDTO>> GetAll()
             {
             return _mapper.Map<IEnumerable<Customer>, IEnumerable<CustomerDTO>>(_db.Customers.Include(u => u.Companies));
             }

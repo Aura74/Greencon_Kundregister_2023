@@ -4,12 +4,15 @@
 @inject ICompanyRepository _companyRepository
 @inject ICustomerRepository _customerRepository
 @inject NavigationManager _navigationManager
+@inject IFileUpload _fileUpload
+@inject IJSRuntime _jsRuntime
+@inject IJSRuntime JsRuntime;
 
 <div class="row my-2">
 
     <h3 class="card-title text-primary mb-3 ml-3">@Title kund</h3>
 
-    <div class="col-10">
+    <div class="col-md-10">
                 @if (IsLoading)
         {
              <div class="text-center">
@@ -50,24 +53,25 @@
                         {
                             <option value="@comp.Id">@comp.CompanyName</option>
                         }
-
                     </InputSelect>
                     <ValidationMessage For="()=>Customer.CompaniesId"></ValidationMessage>
                 </div>
 
 
-
-
-
-            <div class="form-group py-2">
+                <div class="form-group pt-4 col-6">
+                    <InputFile OnChange="HandleImageUpload"></InputFile>
+                </div>
+                
+                <div class="form-group py-2">
                 <button class="btn btn-primary">@Title kund</button>
-                    <NavLink href="customer" class="btn btn-secondary">Tillbaka till listan</NavLink>
+                <NavLink href="customer" class="btn btn-secondary">Tillbaka till listan</NavLink>
             </div>
-
         </EditForm>
-          }
+        }
     </div>
-
+    <div class="col-md-2">
+        <img src="@Customer.ImageUrl" class="w-100">
+    </div>
 </div>
 
 
@@ -75,21 +79,22 @@
     [Parameter]
     public int Id { get; set; }
 
-    private CustomerDTO Customer { get; set; } = new(); //CustomerDTO
+    private CustomerDTO Customer { get; set; } = new() //CustomerDTO
+    {
+        ImageUrl = "/images/default.png"
+    };
 
     private IEnumerable<CompanyDTO> Companies { get; set; } = new List<CompanyDTO>();
-
-
     private string Title { get; set; } = "Skapa ny";
-
     public bool IsLoading { get; set; }
+    public string OldImageUrl { get; set; }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             await LoadCustomers();
         }
-
     }
 
     private async Task LoadCustomers()
@@ -102,11 +107,11 @@
             //Uppdatera
             Title = "Uppdatera";
             Customer = await _customerRepository.Get(Id); // Customer kan vara fel
+            OldImageUrl = Customer.ImageUrl;
         }
         IsLoading = false;
         StateHasChanged();
     }
-
 
     private async Task UpsertCustomer()
     {
@@ -114,13 +119,52 @@
         {
             //create
             await _customerRepository.Create(Customer);
+            //await _jsRuntime.ToastrSuccess("Customer created successfully.");
         }
         else
         {
             //update
-            await _customerRepository.Update(Customer);
-        }
 
+            if (OldImageUrl != Customer.ImageUrl)
+                {
+                    _fileUpload.DeleteFile(OldImageUrl);
+
+                }
+
+            await _customerRepository.Update(Customer);
+           // await _jsRuntime.ToastrSuccess("Customer updated successfully.");
+        }
         _navigationManager.NavigateTo("customer");
+    }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        IsLoading = true;
+        try
+        {
+            if (e.GetMultipleFiles().Count > 0)
+            {
+                foreach (var file in e.GetMultipleFiles())
+                {
+                    System.IO.FileInfo fileInfo = new System.IO.FileInfo(file.Name);
+                    if (fileInfo.Extension.ToLower() == ".jpg" ||
+                      fileInfo.Extension.ToLower() == ".png" ||
+                      fileInfo.Extension.ToLower() == ".jpeg")
+                    {
+                        Customer.ImageUrl = await _fileUpload.UploadFile(file);
+                    }
+                    else
+                    {
+                        //await _jsRuntime.ToastrError("Please select .jpg/.jpeg/.png file only"); // Funkar inte med .NET 7
+                        return;
+                    }
+                }
+            }
+            IsLoading = false;
+        }
+        catch (Exception ex)
+        {
+            // await _jsRuntime.ToastrError(ext.Message); // Funkar inte med .NET 7
+        }
     }
 }

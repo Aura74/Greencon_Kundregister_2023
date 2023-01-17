@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Kund_Models\Kund_Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\customers\" />
+  </ItemGroup>
+
 </Project>
